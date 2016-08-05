@@ -178,8 +178,12 @@ RUN cat /tmp/kolla_bashrc >> /etc/bash.bashrc
 # This will prevent questions from being asked during the install
 ENV DEBIAN_FRONTEND noninteractive
 
+# Reducing disk footprint
+COPY dpkg_reducing_disk_footprint /etc/dpkg/dpkg.cfg.d/dpkg_reducing_disk_footprint
+
 COPY sources.list /etc/apt/
 COPY apt_preferences /etc/apt/preferences
+
 
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 199369E5404BD5FC7D2FE43BCBCB082A1BB943DB \
     && apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 391A9AA2147192839E9DB0315EDB1B62EC4926EA \
