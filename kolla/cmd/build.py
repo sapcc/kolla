@@ -49,7 +49,7 @@ if PROJECT_ROOT not in sys.path:
 from kolla.common import config as common_config
 from kolla import version
 
-logging.basicConfig()
+logging.basicConfig(format="%(asctime)s %(levelname)s:%(name)s:%(message)s")
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
@@ -95,8 +95,16 @@ class PushThread(threading.Thread):
         while True:
             try:
                 image = self.queue.get()
-                LOG.debug('%s:Try to push the image', image['name'])
-                self.push_image(image)
+                # save the image status
+                status = image['status']
+                for i in six.moves.range(self.conf.retries * 2 + 1):
+                    LOG.info('%s:Try to push the image (attempt %d)' % (image['name'], i+1))
+                    self.push_image(image)
+                    if not 'error' in image['status']:
+                        break
+                    else:
+                        # reset the image status and try again
+                        image['status'] = status
             except requests_exc.ConnectionError:
                 LOG.exception('%s:Make sure Docker is running and that you'
                               ' have the correct privileges to run Docker'
@@ -105,22 +113,33 @@ class PushThread(threading.Thread):
             finally:
                 if "error" not in image['status']:
                     LOG.info('%s:Pushed successfully', image['name'])
+                else:
+                    LOG.error('%s: Push failed again. Giving up.', image['name'])
                 self.queue.task_done()
 
     def push_image(self, image):
         image['push_logs'] = str()
+        status = None
+        detail = None
+        try:
+            for response in self.dc.push(image['fullname'],
+                                         stream=True,
+                                         insecure_registry=True):
+                stream = json.loads(response)
 
-        for response in self.dc.push(image['fullname'],
-                                     stream=True,
-                                     insecure_registry=True):
-            stream = json.loads(response)
-
-            if 'stream' in stream:
-                image['push_logs'] = image['logs'] + stream['stream']
-                LOG.info('%s', stream['stream'])
-            elif 'errorDetail' in stream:
-                image['status'] = "error"
-                LOG.error(stream['errorDetail']['message'])
+                if 'status' in stream:
+                    image['push_logs'] = image['logs'] + stream['status']
+                    if stream['status'] != status or detail != stream.get('progress', ''):
+                        id = stream.get('id', '')
+                        detail = stream.get('progress', '')
+                        LOG.debug('%s: %s %s %s' % (image['name'], id, stream['status'], detail))
+                        status = stream['status']
+                elif 'errorDetail' in stream:
+                    image['status'] = "error"
+                    LOG.error("%s:Push failed: %s" %(image['name'], stream['errorDetail']['message']))
+        except Exception as e:
+            image['status'] = "error"
+            LOG.error("%s:Push failed: %s" %(image['name'], e))
 
 
 class WorkerThread(threading.Thread):
