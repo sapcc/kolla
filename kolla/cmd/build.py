@@ -75,6 +75,7 @@ class KollaRpmSetupUnknownConfig(Exception):
 def docker_client():
     try:
         docker_kwargs = docker.utils.kwargs_from_env()
+        docker_kwargs['timeout'] = os.getenv('DOCKER_CLIENT_TIMEOUT', docker.constants.DEFAULT_TIMEOUT_SECONDS)
         return docker.Client(version='auto', **docker_kwargs)
     except docker.errors.DockerException:
         LOG.exception('Can not communicate with docker service.'
