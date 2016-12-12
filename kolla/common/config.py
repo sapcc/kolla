@@ -133,6 +133,8 @@ _CLI_OPTS = [
                 help=("Don't build images. Generate Dockerfile only")),
     cfg.IntOpt('timeout', default=120,
                help='Time in seconds after which any operation times out'),
+    cfg.StrOpt('working-dir', short='w', default=None,
+               help='The working directory, defaults to a random temp-directory'),
 ]
 
 _BASE_OPTS = [
