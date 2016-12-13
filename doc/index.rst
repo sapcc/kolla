@@ -56,6 +56,7 @@ Kolla Overview
    operating-kolla
    security
    troubleshooting
+   other-build-systems
 
 Kolla Services
 ==============

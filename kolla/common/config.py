@@ -216,6 +216,8 @@ _CLI_OPTS = [
                 help='Attempt to pull a newer version of the base image.'),
     cfg.StrOpt('working-dir', short='w', default=None,
                help = 'The working directory, defaults to a random temp-directory'),
+    cfg.MultiOpt('template', types.String(),
+                 help=('Render additonal templates')),
 ]
 
 _BASE_OPTS = [
