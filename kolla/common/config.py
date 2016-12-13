@@ -135,6 +135,8 @@ _CLI_OPTS = [
                help='Time in seconds after which any operation times out'),
     cfg.StrOpt('working-dir', short='w', default=None,
                help='The working directory, defaults to a random temp-directory'),
+    cfg.MultiOpt('template', types.String(), short='l',
+                 help=('Render additonal templates')),
 ]
 
 _BASE_OPTS = [
