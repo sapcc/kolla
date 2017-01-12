@@ -328,7 +328,9 @@ RUN ln -s openstack-base-source/* /requirements \
         stevedore \
         unicodecsv \
         warlock \
-        wrapt
+        wrapt \
+        git+https://github.com/sapcc/openstack-ops-middleware.git \
+        git+https://github.com/sapcc/oslo.vmware.git@stable/mitaka-m3#egg=oslo.vmware
 
 ENV PATH /var/lib/kolla/venv/bin:$PATH
 
