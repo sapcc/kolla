@@ -221,8 +221,19 @@ class PushTask(DockerTask):
     def run(self):
         image = self.image
         self.logger.info('Trying to push the image')
+        # save the image status
+        status = image.status
+
         try:
-            self.push_image(image)
+            for i in six.moves.range(self.conf.retries * 2 + 1):
+                self.logger.info('%s:Try to push the image (attempt %d)' % (image.name, i + 1))
+                self.push_image(image)
+                if image.status not in STATUS_ERRORS:
+                    break
+                else:
+                    # reset the image status and try again
+                    image.status = status
+
         except requests_exc.ConnectionError:
             self.logger.exception('Make sure Docker is running and that you'
                                   ' have the correct privileges to run Docker'
@@ -237,19 +248,34 @@ class PushTask(DockerTask):
                 self.logger.info('Pushed successfully')
                 self.success = True
             else:
+                self.logger.error('%s: Push failed again. Giving up.', image.name)
                 self.success = False
 
     def push_image(self, image):
-        for response in self.dc.push(image.canonical_name,
-                                     stream=True,
-                                     insecure_registry=True):
-            stream = json.loads(response)
-            if 'stream' in stream:
-                self.logger.info(stream['stream'])
-            elif 'errorDetail' in stream:
-                image.status = STATUS_ERROR
-                self.logger.error(stream['errorDetail']['message'])
+        status = None
+        detail = None
+        try:
+            for response in self.dc.push(image.canonical_name,
+                                         stream=True,
+                                         insecure_registry=True):
+                stream = json.loads(response)
 
+                if 'stream' in stream:
+                    self.logger.info(stream['stream'])
+
+                if 'status' in stream:
+                    # image['push_logs'] = image['logs'] + stream['status']
+                    if stream['status'] != status or detail != stream.get('progress', ''):
+                        id = stream.get('id', '')
+                        detail = stream.get('progress', '')
+                        self.logger.debug('%s: %s %s %s' % (image.name, id, stream['status'], detail))
+                        status = stream['status']
+                elif 'errorDetail' in stream:
+                    image.status = STATUS_ERROR
+                    self.logger.error("%s:Push failed: %s" %(image.name, stream['errorDetail']['message']))
+        except Exception as e:
+            image.status = STATUS_ERROR
+            self.logger.error("%s:Push failed: %s" % (image.name, e))
 
 class BuildTask(DockerTask):
     """Task that builds out an image."""
