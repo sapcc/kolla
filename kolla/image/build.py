@@ -138,8 +138,9 @@ class DockerTask(task.Task):
 
     docker_kwargs = docker.utils.kwargs_from_env()
 
-    def __init__(self):
+    def __init__(self, conf):
         super(DockerTask, self).__init__()
+        self.conf = conf
         self._dc = None
 
     @property
@@ -147,6 +148,7 @@ class DockerTask(task.Task):
         if self._dc is not None:
             return self._dc
         docker_kwargs = self.docker_kwargs.copy()
+        docker_kwargs['timeout'] = self.conf.timeout
         self._dc = docker.Client(version='auto', **docker_kwargs)
         return self._dc
 
@@ -209,8 +211,7 @@ class PushTask(DockerTask):
     """Task that pushes an image to a docker repository."""
 
     def __init__(self, conf, image):
-        super(PushTask, self).__init__()
-        self.conf = conf
+        super(PushTask, self).__init__(conf)
         self.image = image
         self.logger = image.logger
 
@@ -281,8 +282,7 @@ class BuildTask(DockerTask):
     """Task that builds out an image."""
 
     def __init__(self, conf, image, push_queue):
-        super(BuildTask, self).__init__()
-        self.conf = conf
+        super(BuildTask, self).__init__(conf)
         self.image = image
         self.push_queue = push_queue
         self.nocache = not conf.cache
