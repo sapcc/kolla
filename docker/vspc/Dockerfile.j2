@@ -1,0 +1,24 @@
+FROM {{ namespace }}/{{ image_prefix }}openstack-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{% block vscp_header %}{% endblock %}
+
+{% if install_type == 'binary' %}
+
+RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
+    && /bin/false
+
+{% elif install_type == 'source' %}
+
+RUN pip --no-cache-dir install git+https://github.com/isnotajoke/vSPC.py.git#egg=vSPC \
+    && useradd --user-group vspc
+
+{% endif %}
+
+RUN usermod -a -G kolla vspc
+
+{% block vmtp_footer %}{% endblock %}
+{% block footer %}{% endblock %}
+{{ include_footer }}
+
+USER vspc
