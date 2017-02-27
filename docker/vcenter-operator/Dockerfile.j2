@@ -1,0 +1,24 @@
+FROM {{ namespace }}/{{ image_prefix }}openstack-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{% block vcenter_operator_header %}{% endblock %}
+
+{% if install_type == 'binary' %}
+
+RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
+    && /bin/false
+
+{% elif install_type == 'source' %}
+
+RUN pip --no-cache-dir install -c /requirements/upper-constraints.txt 'git+https://github.com/sapcc/kubernetes-operators.git@fwiesel-dev#egg=vcenter_operator&subdirectory=vcenter-operator' \
+    && useradd --user-group vcenter_operator
+
+{% endif %}
+
+# RUN usermod -a -G kolla vcenter_operator
+
+{% block vcenter_operator_footer %}{% endblock %}
+{% block footer %}{% endblock %}
+{{ include_footer }}
+
+USER root
