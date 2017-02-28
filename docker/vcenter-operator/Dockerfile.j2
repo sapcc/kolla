@@ -15,10 +15,11 @@ RUN pip --no-cache-dir install -c /requirements/upper-constraints.txt 'git+https
 
 {% endif %}
 
-# RUN usermod -a -G kolla vcenter_operator
+RUN usermod -a -G kolla vcenter_operator
 
 {% block vcenter_operator_footer %}{% endblock %}
 {% block footer %}{% endblock %}
 {{ include_footer }}
 
-USER root
+USER vcenter_operator
+CMD ["vcenter-operator"]
