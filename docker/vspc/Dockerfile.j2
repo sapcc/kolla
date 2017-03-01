@@ -22,3 +22,5 @@ RUN usermod -a -G kolla vspc
 {{ include_footer }}
 
 USER vspc
+
+CMD ["vSPCServer","--no-fork","--stdout"]
