@@ -11,15 +11,14 @@ RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
 {% elif install_type == 'source' %}
 
 RUN pip --no-cache-dir install -c /requirements/upper-constraints.txt 'git+https://github.com/sapcc/kubernetes-operators.git@fwiesel-dev#egg=vcenter_operator&subdirectory=vcenter-operator' \
-    && useradd --user-group vcenter_operator
+    && useradd --create-home --user-group -G kolla vcenter_operator
 
 {% endif %}
 
-RUN usermod -a -G kolla vcenter_operator
+ADD config.json /var/lib/kolla/config_files/config.json
 
 {% block vcenter_operator_footer %}{% endblock %}
 {% block footer %}{% endblock %}
 {{ include_footer }}
 
 USER vcenter_operator
-CMD ["vcenter-operator"]
