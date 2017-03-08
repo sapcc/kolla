@@ -15,8 +15,6 @@ RUN pip --no-cache-dir install -c /requirements/upper-constraints.txt 'git+https
 
 {% endif %}
 
-ADD config.json /var/lib/kolla/config_files/config.json
-
 {% block vcenter_operator_footer %}{% endblock %}
 {% block footer %}{% endblock %}
 {{ include_footer }}
