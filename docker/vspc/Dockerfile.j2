@@ -10,7 +10,7 @@ RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
 
 {% elif install_type == 'source' %}
 
-RUN pip --no-cache-dir install git+https://github.com/isnotajoke/vSPC.py.git#egg=vSPC \
+RUN pip --no-cache-dir install git+https://github.com/openstack/vmware-vspc.git#egg=vmware-vspc \
     && useradd --user-group vspc
 
 {% endif %}
@@ -23,4 +23,3 @@ RUN usermod -a -G kolla vspc
 
 USER vspc
 
-CMD ["vSPCServer","--no-fork","--stdout"]
