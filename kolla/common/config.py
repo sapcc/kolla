@@ -140,6 +140,8 @@ _CLI_OPTS = [
     cfg.StrOpt('template-override',
                help='Path to template override file'),
     cfg.StrOpt('logs-dir', help='Path to logs directory'),
+    cfg.StrOpt('working-dir', short='w', default=None,
+                help='The working directory, defaults to a random temp-directory'),
 ]
 
 _BASE_OPTS = [
