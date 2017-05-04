@@ -663,7 +663,7 @@ class KollaWorker(object):
                 image['source'] = process_source_installation(image,
                                                               image['name'])
                 for plugin in [match.group(0) for match in
-                               (re.search('{}-plugin-.+'.format(image['name']),
+                               (re.search('^{}-plugin-.+'.format(image['name']),
                                           section) for section in
                                self.conf.list_all_sections()) if match]:
                     self.conf.register_opts(common_config.get_source_opts(),
