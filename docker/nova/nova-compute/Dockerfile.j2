@@ -53,13 +53,17 @@ RUN apt-get install -y --no-install-recommends \
 
     {% endif %}
 
-RUN /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt libvirt-python
+RUN /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt libvirt-python oslo.vmware
 
 {% endif %}
 
+ADD plugins-archive /
 COPY extend_start.sh /usr/local/bin/kolla_nova_extend_start
 RUN chmod 755 /usr/local/bin/kolla_nova_extend_start \
-    && rm -f /etc/machine-id
+    && rm -f /etc/machine-id \
+    && if [ "$(ls /plugins)" ]; then \
+           /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /plugins/*; \
+       fi
 
 {{ include_footer }}
 
