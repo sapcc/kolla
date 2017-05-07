@@ -29,6 +29,8 @@ MAINTAINER {{ maintainer }}
             'bind9'
         ] %}
     {% endif %}
+{% else %}
+    {% set designate_pool_manager_packages = [] %}
 {% endif %}
 {{ macros.install_packages(designate_pool_manager_packages | customizable("packages")) }}
 

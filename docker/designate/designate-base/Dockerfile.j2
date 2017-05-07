@@ -36,6 +36,8 @@ RUN cp /etc/designate/policy.json /tmp/ \
 
     {% endif %}
 {% elif install_type == 'source' %}
+{% set designate_base_packages = [] %}
+{{ macros.install_packages(designate_base_packages | customizable("packages")) }}
 
 ADD designate-base-archive /designate-base-source
 RUN ln -s designate-base-source/* designate \

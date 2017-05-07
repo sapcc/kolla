@@ -17,8 +17,10 @@ MAINTAINER {{ maintainer }}
             'python-designateclient'
         ] %}
     {% endif %}
-{{ macros.install_packages(designate_sink_packages | customizable("packages")) }}
+{% else %}
+    {% set designate_sink_packages = [] %}
 {% endif %}
+{{ macros.install_packages(designate_sink_packages | customizable("packages")) }}
 
 {% block designate_sink_footer %}{% endblock %}
 {% block footer %}{% endblock %}
