@@ -18,9 +18,19 @@ MAINTAINER {{ maintainer }}
         ] %}
     {% endif %}
 
-{{ macros.install_packages(barbican_api_packages | customizable("packages")) }}
-
+{% else %}
+    {% if base_distro in ['centos', 'fedora', 'oraclelinux', 'rhel'] %}
+       {% set barbican_api_packages = [
+                'uwsgi-plugin-python'
+       ] %}
+    {% elif base_distro in ['ubuntu'] %}
+        {% set barbican_api_packages = [
+                'uwsgi-plugin-python'
+        ] %}
+    {% endif %}
 {% endif %}
+
+{{ macros.install_packages(barbican_api_packages | customizable("packages")) }}
 
 COPY extend_start.sh /usr/local/bin/kolla_barbican_extend_start
 
