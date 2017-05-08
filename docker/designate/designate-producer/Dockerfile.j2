@@ -1,0 +1,29 @@
+FROM {{ namespace }}/{{ image_prefix }}designate-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{% block designate_producer_header %}{% endblock %}
+
+{% import "macros.j2" as macros with context %}
+
+{% if install_type == 'binary' %}
+    {% if base_distro in ['centos', 'fedora', 'oraclelinux', 'rhel'] %}
+       {% set designate_producer_packages = [
+            'openstack-designate-producer',
+            'python-designateclient'
+        ] %}
+    {% elif base_distro in ['ubuntu'] %}
+       {% set designate_producer_packages = [
+            'designate-producer',
+            'python-designateclient'
+        ] %}
+    {% endif %}
+{% else %}
+    {% set designate_producer_packages = [] %}
+{% endif %}
+{{ macros.install_packages(designate_producer_packages | customizable("packages")) }}
+
+{% block designate_producer_footer %}{% endblock %}
+{% block footer %}{% endblock %}
+{{ include_footer }}
+
+USER designate
