@@ -39,6 +39,7 @@ RUN cp /etc/designate/policy.json /tmp/ \
 {% set designate_base_packages = [] %}
 {{ macros.install_packages(designate_base_packages | customizable("packages")) }}
 
+COPY designate_sudoers_source /etc/sudoers.d/kolla_ironic_inspector_sudoers
 ADD designate-base-archive /designate-base-source
 RUN ln -s designate-base-source/* designate \
     && useradd --user-group designate \
