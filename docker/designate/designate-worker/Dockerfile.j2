@@ -1,0 +1,29 @@
+FROM {{ namespace }}/{{ image_prefix }}designate-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{% block designate_worker_header %}{% endblock %}
+
+{% import "macros.j2" as macros with context %}
+
+{% if install_type == 'binary' %}
+    {% if base_distro in ['centos', 'fedora', 'oraclelinux', 'rhel'] %}
+       {% set designate_worker_packages = [
+            'openstack-designate-worker',
+            'python-designateclient'
+        ] %}
+    {% elif base_distro in ['ubuntu'] %}
+       {% set designate_worker_packages = [
+            'designate-worker',
+            'python-designateclient'
+        ] %}
+    {% endif %}
+{% else %}
+    {% set designate_worker_packages = [] %}
+{% endif %}
+{{ macros.install_packages(designate_worker_packages | customizable("packages")) }}
+
+{% block designate_worker_footer %}{% endblock %}
+{% block footer %}{% endblock %}
+{{ include_footer }}
+
+USER designate
