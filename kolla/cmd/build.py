@@ -214,7 +214,7 @@ class WorkerThread(threading.Thread):
             try:
                 LOG.debug("%s:Cloning from %s", image['name'],
                           source['source'])
-                git.Git().clone(source['source'], clone_dir)
+                git.Git().clone(source['source'], clone_dir, depth=1, b=source['reference'])
                 git.Git(clone_dir).checkout(source['reference'])
                 reference_sha = git.Git(clone_dir).rev_parse('HEAD')
                 LOG.debug("%s:Git checkout by reference %s (%s)",
