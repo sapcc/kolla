@@ -345,7 +345,7 @@ class BuildTask(DockerTask):
                                        source['reference'].replace('/', '-'))
             try:
                 self.logger.debug("Cloning from %s", source['source'])
-                git.Git().clone(source['source'], clone_dir)
+                git.Git().clone(source['source'], clone_dir, depth=1, b=source['reference'])
                 git.Git(clone_dir).checkout(source['reference'])
                 reference_sha = git.Git(clone_dir).rev_parse('HEAD')
                 self.logger.debug("Git checkout by reference %s (%s)",
