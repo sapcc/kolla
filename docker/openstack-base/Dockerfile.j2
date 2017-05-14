@@ -205,15 +205,13 @@ RUN yum -y install \
     {% elif base_distro in ['ubuntu', 'debian'] %}
 
 RUN apt-get install -y --no-install-recommends \
-        ca-certificates \
-        build-essential \
-        python-dev \
-        libssl-dev \
-        libmariadbclient-dev \
-        libxslt1-dev \
-        libffi-dev \
-        libyaml-dev \
-        pkg-config \
+        libmariadbclient18 \
+        libmysqlclient18 \
+        libxslt1.1 \
+        libffi6 \
+        libyaml-0-2 \
+        xz-utils \
+        patch \
         git \
     && apt-get clean
 
