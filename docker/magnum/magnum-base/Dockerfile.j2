@@ -13,7 +13,7 @@ RUN yum install -y openstack-magnum-common \
 ADD magnum-base-archive /magnum-base-source
 RUN ln -s magnum-base-source/* magnum \
     && useradd --user-group magnum \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /magnum \
+    && pip install -c requirements/upper-constraints.txt -e /magnum && rm -fr /root/.cache \
     && mkdir -p /etc/magnum /home/magnum \
     && cp -r /magnum/etc/magnum/* /etc/magnum \
     && chown -R magnum: /etc/magnum /home/magnum

@@ -20,7 +20,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD heat-base-archive /heat-base-source
 RUN ln -s heat-base-source/* heat \
     && useradd --user-group heat \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /heat \
+    && pip install -c requirements/upper-constraints.txt -e /heat && rm -fr /root/.cache \
     && mkdir -p /etc/heat /home/heat \
     && cp -r /heat/etc/heat/* /etc/heat/ \
     && chown -R heat: /etc/heat /home/heat

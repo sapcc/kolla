@@ -47,7 +47,7 @@ ADD nova-base-archive /nova-base-source
 RUN ln -s nova-base-source/* nova \
     && useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && chmod 755 /var/lib/nova \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /nova \
+    && pip install -c requirements/upper-constraints.txt -e /nova && rm -fr /root/.cache \
     && mkdir -p /etc/nova /var/lib/nova \
     && cp -r /nova/etc/nova/* /etc/nova/ \
     && chown -R nova: /etc/nova /var/lib/nova \

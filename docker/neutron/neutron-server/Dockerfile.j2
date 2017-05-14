@@ -5,7 +5,7 @@ ADD plugins-archive /
 COPY extend_start.sh /usr/local/bin/kolla_neutron_extend_start
 RUN chmod 755 /usr/local/bin/kolla_neutron_extend_start \
     && if [ "$(ls /plugins)" ]; then \
-           pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /plugins/*; \
+           pip install -c requirements/upper-constraints.txt /plugins/*; && rm -fr /root/.cache \
        fi
 
 {{ include_footer }}

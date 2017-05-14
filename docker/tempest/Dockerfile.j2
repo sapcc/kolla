@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends \
 
 ADD tempest-archive /tempest-source
 RUN ln -s tempest-source/* tempest \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /tempest \
+    && pip install -c requirements/upper-constraints.txt -e /tempest && rm -fr /root/.cache \
     && mkdir -p /etc/tempest /var/log/tempest /etc/tempest/tempest_lock
 
 {% endif %}

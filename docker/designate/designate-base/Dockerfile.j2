@@ -30,7 +30,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD designate-base-archive /designate-base-source
 RUN ln -s designate-base-source/* designate \
     && useradd --user-group designate \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /designate \
+    && pip install -c requirements/upper-constraints.txt -e /designate && rm -fr /root/.cache \
     && mkdir -p /etc/designate /var/log/designate /home/designate \
     && cp -r /designate/etc/designate/* /etc/designate/ \
     && mv /etc/designate/rootwrap.conf.sample /etc/designate/rootwrap.conf \

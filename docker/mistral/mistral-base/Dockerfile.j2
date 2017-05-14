@@ -11,7 +11,7 @@ RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
 ADD mistral-base-archive /mistral-base-source
 RUN ln -s mistral-base-source/* mistral \
     && useradd --user-group mistral \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install /mistral \
+    && pip install /mistral && rm -fr /root/.cache \
     && mkdir -p /etc/mistral /home/mistral \
     && cp -r /mistral/etc/* /etc/mistral/ \
     && chown -R mistral: /etc/mistral /home/mistral

@@ -35,7 +35,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD manila-base-archive /manila-base-source
 RUN ln -s manila-base-source/* manila \
     && useradd --user-group manila \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /manila \
+    && pip install -c requirements/upper-constraints.txt -e /manila && rm -fr /root/.cache \
     && mkdir -p /etc/manila /var/lib/manila /var/cache/manila /home/manila \
     && cp -r /manila/etc/manila/* /etc/manila/ \
     && chown -R manila: /etc/manila /var/lib/manila /var/cache/manila /home/manila \

@@ -37,7 +37,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD barbican-base-archive /barbican-base-source
 RUN ln -s barbican-base-source/* barbican \
     && useradd --user-group barbican \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /barbican \
+    && pip install -c requirements/upper-constraints.txt -e /barbican && rm -fr /root/.cache \
     && mkdir -p /etc/barbican /var/lib/barbican /home/barbican \
     && cp -r /barbican/etc/* /etc/barbican/ \
     && chown -R barbican: /etc/barbican /var/lib/barbican /home/barbican

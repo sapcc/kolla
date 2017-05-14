@@ -227,9 +227,9 @@ RUN ln -s openstack-base-source/* /requirements \
     && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
     && python get-pip.py \
     && rm get-pip.py \
-    && pip --no-cache-dir install -U virtualenv \
+    && pip install -U virtualenv && rm -fr /root/.cache \
     && virtualenv --system-site-packages /var/lib/kolla/venv \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt \
+    && /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt \
         Babel \
         Mako \
         MarkupSafe \
@@ -332,8 +332,9 @@ RUN ln -s openstack-base-source/* /requirements \
         warlock \
         wrapt \
         urllib3[secure] \
+    && rm -fr /root/.cache \
     && if [ "$(ls /plugins)" ]; then \
-        /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /plugins/*; \
+        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
        fi
 
 

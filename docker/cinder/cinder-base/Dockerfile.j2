@@ -44,7 +44,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD cinder-base-archive /cinder-base-source
 RUN ln -s cinder-base-source/* cinder \
     && useradd --user-group cinder \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /cinder \
+    && pip install -c requirements/upper-constraints.txt -e /cinder && rm -fr /root/.cache \
     && mkdir -p /etc/cinder /var/lib/cinder /home/cinder \
     && cp -r /cinder/etc/cinder/* /etc/cinder/ \
     && chown -R cinder: /etc/cinder /var/lib/cinder /home/cinder \

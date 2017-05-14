@@ -20,7 +20,7 @@ RUN apt-get install -y --no-install-recommends \
 ADD ironic-base-archive /ironic-base-source
 RUN ln -s ironic-base-source/* ironic \
     && useradd --user-group ironic \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /ironic \
+    && pip install -c requirements/upper-constraints.txt -e /ironic && rm -fr /root/.cache \
     && mkdir -p /etc/ironic /var/log/ironic /home/ironic \
     && cp -r /ironic/etc/ironic/* /etc/ironic/ \
     && chown -R ironic: /etc/ironic /var/log/ironic /home/ironic \
