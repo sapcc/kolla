@@ -58,6 +58,16 @@ RUN ln -s keystone-source/* keystone \
     && cp /keystone/httpd/keystone.py /var/www/cgi-bin/keystone/main \
     && chown -R keystone: /etc/keystone /var/www/cgi-bin/keystone /var/log/apache2 /home/keystone
 
+# v9.2.0 ldap drivers
+RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "python-ldap==2.4.25"
+RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "ldappool<2.0.0:python_version=='2.7'"
+
+# install keystone-extensions & middleware
+RUN cd /keystone && pip --no-cache-dir install --upgrade git+https://github.wdf.sap.corp/monsoon/keystone-extensions.git
+
+# install keystone-config-tools
+RUN cd /keystone && pip --no-cache-dir install --upgrade git+https://github.wdf.sap.corp/monsoon/keystone-config-tools.git
+
 {% endif %}
 
 RUN usermod -a -G kolla keystone \
