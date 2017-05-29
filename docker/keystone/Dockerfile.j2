@@ -70,7 +70,7 @@ RUN usermod -a -G kolla keystone \
     && chown -R keystone: /var/www/cgi-bin/keystone \
     && chmod 755 /var/www/cgi-bin/keystone/* \
     && if [ "$(ls /plugins)" ]; then \
-           pip install -c requirements/upper-constraints.txt /plugins/*; && rm -fr /root/.cache \
+           pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
        fi
 
 COPY keystone_bootstrap.sh /usr/local/bin/kolla_keystone_bootstrap
