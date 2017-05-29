@@ -48,6 +48,7 @@ RUN apt-get install -y --no-install-recommends \
 
     {% endif %}
 
+ADD plugins-archive /
 ADD keystone-archive /keystone-source
 RUN ln -s keystone-source/* keystone \
     && useradd --user-group keystone \
@@ -56,14 +57,14 @@ RUN ln -s keystone-source/* keystone \
     && cp -r /keystone/etc/* /etc/keystone/ \
     && cp /keystone/httpd/keystone.py /var/www/cgi-bin/keystone/admin \
     && cp /keystone/httpd/keystone.py /var/www/cgi-bin/keystone/main \
-    && chown -R keystone: /etc/keystone /var/www/cgi-bin/keystone /var/log/apache2 /home/keystone
+    && chown -R keystone: /etc/keystone /var/www/cgi-bin/keystone /var/log/apache2 /home/keystone \
+    && if [ "$(ls /plugins)" ]; then \
+           pip install -c requirements/upper-constraints.txt /plugins/*; && rm -fr /root/.cache \
+       fi
 
 # v9.2.0 ldap drivers
-RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "python-ldap==2.4.25"
-RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "ldappool<2.0.0:python_version=='2.7'"
-
-ADD plugins-archive /
-pip --no-cache-dir install /plugins/*
+#RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "python-ldap==2.4.25"
+#RUN cd /keystone && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade "ldappool<2.0.0:python_version=='2.7'"
 
 {% endif %}
 
