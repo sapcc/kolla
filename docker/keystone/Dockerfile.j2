@@ -61,8 +61,8 @@ RUN ln -s keystone-source/* keystone \
 {% endif %}
 
 # v9.2.0 ldap drivers
-RUN pip -c requirements/upper-constraints.txt install --upgrade "python-ldap==2.4.25" && rm -fr /root/.cache
-RUN pip -c requirements/upper-constraints.txt install --upgrade "ldappool<2.0.0:python_version=='2.7'" && rm -fr /root/.cache
+RUN pip install -c requirements/upper-constraints.txt "python-ldap==2.4.25" && rm -fr /root/.cache
+RUN pip install -c requirements/upper-constraints.txt "ldappool<2.0.0:python_version=='2.7'" && rm -fr /root/.cache
 
 ADD plugins-archive /
 
