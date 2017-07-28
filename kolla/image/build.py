@@ -974,6 +974,42 @@ class KollaWorker(object):
 
         return queue
 
+    def render_template(self):
+        if not self.conf.template:
+            return
+
+        self.build_image_list()
+        self.find_parents()
+        self.filter_images()
+
+        kolla_version = version.version_info.cached_version_string()
+        supported_distro_release = common_config.DISTRO_RELEASE.get(
+            self.base)
+        for path in self.conf.template:
+            path = os.path.realpath(path)
+            env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(path)))
+            template_name = os.path.basename(path)
+            template = env.get_template(template_name)
+            image_name = path.split("/")[-1]
+            values = {'base_distro': self.base,
+                      'base_image': self.conf.base_image,
+                      'base_distro_tag': self.base_tag,
+                      'supported_distro_release': supported_distro_release,
+                      'install_metatype': self.install_metatype,
+                      'image_prefix': self.image_prefix,
+                      'install_type': self.install_type,
+                      'namespace': self.namespace,
+                      'tag': self.tag,
+                      'maintainer': self.maintainer,
+                      'kolla_version': kolla_version,
+                      'image_name': image_name,
+                      'rpm_setup': self.rpm_setup,
+                      'images': [ image for image in self.images if image.status == STATUS_MATCHED ],
+                      'working_dir': self.working_dir }
+            content = template.render(values)
+            with open(os.path.join(self.working_dir, os.path.splitext(template_name)[0]), 'w') as f:
+                f.write(content)
+
 
 def run_build():
     """Build container images.
@@ -991,6 +1027,7 @@ def run_build():
     kolla.setup_working_dir()
     kolla.find_dockerfiles()
     kolla.create_dockerfiles()
+    kolla.render_template()
 
     if conf.template_only:
         LOG.info('Dockerfiles are generated in %s', kolla.working_dir)
