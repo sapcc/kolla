@@ -17,7 +17,7 @@ RUN pip --no-cache-dir install git+https://github.com/openstack/vmware-vspc.git#
 
 RUN usermod -a -G kolla vspc
 
-{% block vmtp_footer %}{% endblock %}
+{% block vspc_footer %}{% endblock %}
 {% block footer %}{% endblock %}
 {{ include_footer }}
 
