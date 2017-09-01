@@ -1,0 +1,4 @@
+.*env*
+.eggs
+**/*.pyc
+docker/
