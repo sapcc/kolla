@@ -1,7 +1,7 @@
 FROM {{ namespace }}/{{ image_prefix }}base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
-{% block vscp_header %}{% endblock %}
+{% block vspc_header %}{% endblock %}
 
 {% if install_type == 'binary' %}
 
