@@ -248,6 +248,7 @@ class Image(object):
                  source=None, logger=None, docker_client=None):
         self.name = name
         self.canonical_name = canonical_name
+        self.untagged_name = canonical_name.rsplit(':', 1)[0]
         self.path = path
         self.status = status
         self.parent = parent
@@ -566,6 +567,30 @@ class BuildTask(DockerTask):
 
         buildargs = self.update_buildargs()
         try:
+            cache_images = []
+            for tag in self.conf.cache_tag:
+                try:
+                    tagged_name = "{0}:{1}".format(image.untagged_name, tag)
+                    image_count = len(self.dc.images(name=tagged_name, quiet=True))
+                    if image_count != 1:
+                        for response in self.dc.pull(tagged_name, stream=True):
+                            stream = json.loads(response.decode('utf-8'))
+                            if 'status' in stream:
+                                for line in stream['status'].split('\n'):
+                                    if line:
+                                        self.logger.info('%s', line)
+                            if 'errorDetail' in stream:
+                                self.logger.error('Error\'d with the following message')
+                                for line in stream['errorDetail']['message'].split('\n'):
+                                    if line:
+                                        self.logger.error('%s', line)
+                    cache_images.append(tagged_name)
+                except docker.errors.NotFound:
+                    pass
+
+            if self.conf.cache_tag:
+                self.logger.info("Caching from %r", cache_images)
+
             for response in self.dc.build(path=image.path,
                                           tag=image.canonical_name,
                                           nocache=not self.conf.cache,
@@ -573,6 +598,7 @@ class BuildTask(DockerTask):
                                           network_mode=self.conf.network_mode,
                                           pull=pull,
                                           forcerm=self.forcerm,
+                                          cache_from=cache_images,
                                           buildargs=buildargs):
                 stream = json.loads(response.decode('utf-8'))
                 if 'stream' in stream:
