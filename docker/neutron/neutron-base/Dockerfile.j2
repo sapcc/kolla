@@ -49,6 +49,8 @@ RUN apt-get install -y --no-install-recommends \
     {% endif %}
 
 ADD neutron-base-archive /neutron-base-source
+ADD plugins-archive /
+
 RUN ln -s neutron-base-source/* neutron \
     && useradd --user-group neutron \
     && pip install -c requirements/upper-constraints.txt -e /neutron && rm -fr /root/.cache \
@@ -58,7 +60,10 @@ RUN ln -s neutron-base-source/* neutron \
     && cp /neutron/etc/api-paste.ini /usr/share/neutron \
     && mv /etc/neutron/neutron/ /etc/neutron/plugins/ \
     && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
-    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/kolla/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf
+    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/kolla/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf \
+    && if [ "$(ls /plugins)" ]; then \
+        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
+    fi
 
 {% endif %}
 

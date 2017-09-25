@@ -44,6 +44,8 @@ RUN apt-get install -y --no-install-recommends \
     {% endif %}
 
 ADD nova-base-archive /nova-base-source
+ADD plugins-archive /
+
 RUN ln -s nova-base-source/* nova \
     && useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && chmod 755 /var/lib/nova \
@@ -51,7 +53,10 @@ RUN ln -s nova-base-source/* nova \
     && mkdir -p /etc/nova /var/lib/nova \
     && cp -r /nova/etc/nova/* /etc/nova/ \
     && chown -R nova: /etc/nova /var/lib/nova \
-    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/kolla/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/nova/rootwrap.conf
+    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/kolla/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/nova/rootwrap.conf \
+    && if [ "$(ls /plugins)" ]; then \
+        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
+    fi
 
 COPY nova_sudoers /etc/sudoers.d/kolla_nova_sudoers
 RUN chmod 750 /etc/sudoers.d \
