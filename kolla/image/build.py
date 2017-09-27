@@ -76,6 +76,42 @@ STATUS_ERRORS = (STATUS_CONNECTION_ERROR, STATUS_PUSH_ERROR,
                  STATUS_ERROR, STATUS_PARENT_ERROR)
 
 
+def set_time(path):
+    for root, dirs, files in os.walk(path):
+        for file_ in files:
+            os.utime(os.path.join(root, file_), (0, 0))
+        for dir_ in dirs:
+            os.utime(os.path.join(root, dir_), (0, 0))
+
+class TarInfoNoMTime(tarfile.TarInfo):
+    @property
+    def mtime(self):
+        return 0
+
+    @mtime.setter
+    def mtime(self, value):
+        pass
+
+def _add_deterministically(tar, name, arcname=None):
+    tarinfo = tar.gettarinfo(name, arcname)
+    if tarinfo is None:
+        return
+
+    if tarinfo.isreg():
+        with open(name, 'rb') as f:
+            tar.addfile(tarinfo, f)
+    elif tarinfo.isdir():
+        tar.addfile(tarinfo)
+        for f in sorted(os.listdir(name)):
+            _add_deterministically(tar, os.path.join(name, f), os.path.join(arcname, f))
+    else:
+        tar.addfile(tarinfo)
+
+
+def tar(dest, source, arcname=None):
+    with tarfile.open(dest, 'w', tarinfo=TarInfoNoMTime) as t:
+        _add_deterministically(t, source, arcname=(arcname or os.path.basename(source)))
+
 SKIPPED_IMAGES = {
     'centos+binary': [
         "almanach-base",
@@ -443,24 +479,34 @@ class BuildTask(DockerTask):
                 reference_sha = git.Git(clone_dir).rev_parse('HEAD')
                 self.logger.debug("Git checkout by reference %s (%s)",
                                   source['reference'], reference_sha)
+
+                if self.conf.reproducible:
+                    # Remove all non-reproducible git-files
+                    os.remove(os.path.join(clone_dir, '.git', 'index')) # Index contains the inode-numbers
+                    HEAD = ("0000000000000000000000000000000000000000 %(sha)s "
+                            "root@localhost 0 +0000\tclone: from %(source)s") % {
+                                'sha': reference_sha,
+                                'source': source['source']}
+                    for d in ['HEAD', 'refs/remotes/origin/HEAD', 'refs/heads/master', 'refs/heads/'+source['reference']]:
+                        file_name = os.path.join(clone_dir, '.git', 'logs', d)
+                        if os.path.isfile(file_name):
+                            with open(file_name, 'w') as f:
+                                f.write(HEAD)
             except Exception as e:
-                self.logger.error("Failed to get source from git", image.name)
+                self.logger.error("Failed to get source from git")
                 self.logger.error("Error: %s", e)
                 # clean-up clone folder to retry
                 shutil.rmtree(clone_dir)
                 image.status = STATUS_ERROR
                 return
 
-            with tarfile.open(dest_archive, 'w') as tar:
-                tar.add(clone_dir, arcname=os.path.basename(clone_dir))
+            tar(dest_archive, clone_dir)
 
         elif source.get('type') == 'local':
             self.logger.debug("Getting local archive from %s",
                               source['source'])
             if os.path.isdir(source['source']):
-                with tarfile.open(dest_archive, 'w') as tar:
-                    tar.add(source['source'],
-                            arcname=os.path.basename(source['source']))
+                tar(dest_archive, source['source'])
             else:
                 shutil.copyfile(source['source'], dest_archive)
 
@@ -521,8 +567,7 @@ class BuildTask(DockerTask):
                         image.status = STATUS_CONNECTION_ERROR
                         raise ArchivingError
             arc_path = os.path.join(image.path, '%s-archive' % arcname)
-            with tarfile.open(arc_path, 'w') as tar:
-                tar.add(items_path, arcname=arcname)
+            tar(arc_path, items_path, arcname=arcname)
             return len(os.listdir(items_path))
 
         self.logger.debug('Processing')
@@ -600,6 +645,7 @@ class BuildTask(DockerTask):
             if self.conf.cache_tag:
                 self.logger.info("Caching from %r", cache_images)
 
+            set_time(image.path)
             for stream in self.dc.build(path=image.path,
                                         tag=image.canonical_name,
                                         nocache=not self.conf.cache,
@@ -852,14 +898,6 @@ class KollaWorker(object):
         self.copy_apt_files()
         LOG.debug('Created working dir: %s', self.working_dir)
 
-    def set_time(self):
-        for root, dirs, files in os.walk(self.working_dir):
-            for file_ in files:
-                os.utime(os.path.join(root, file_), (0, 0))
-            for dir_ in dirs:
-                os.utime(os.path.join(root, dir_), (0, 0))
-        LOG.debug('Set atime and mtime to 0 for all content in working dir')
-
     def _get_filters(self):
         filters = {
             'customizable': jinja_filters.customizable,
@@ -895,12 +933,16 @@ class KollaWorker(object):
         kolla_version = version.version_info.cached_version_string()
         supported_distro_release = common_config.DISTRO_RELEASE.get(
             self.base)
-        for path in self.docker_build_paths:
-            template_name = "Dockerfile.j2"
-            image_name = path.split("/")[-1]
+        template_name = "Dockerfile.j2"
+
+        if self.conf.reproducible:
+            build_date = 'reproducible'
+        else:
             ts = time.time()
-            build_date = datetime.datetime.fromtimestamp(ts).strftime(
-                '%Y%m%d')
+            build_date = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d')
+
+        for path in self.docker_build_paths:
+            image_name = path.split("/")[-1]
             values = {'base_distro': self.base,
                       'base_image': self.conf.base_image,
                       'base_distro_tag': self.base_tag,
@@ -1306,10 +1348,6 @@ def run_build():
     if conf.template_only:
         LOG.info('Dockerfiles are generated in %s', kolla.working_dir)
         return
-
-    # We set the atime and mtime to 0 epoch to preserve allow the Docker cache
-    # to work like we want. A different size or hash will still force a rebuild
-    kolla.set_time()
 
     if conf.save_dependency:
         kolla.build_image_list()
