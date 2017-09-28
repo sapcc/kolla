@@ -264,6 +264,8 @@ _CLI_OPTS = [
                 help=('Squash the image layers. WARNING: it will consume lots'
                       ' of disk IO. "docker-squash" tool is required, install'
                       ' it by "pip install docker-squash"')),
+    cfg.IntOpt('clone-depth', default=None, min=1,
+               help='The depth of the repository to clone'),
 ]
 
 _BASE_OPTS = [

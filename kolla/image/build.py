@@ -474,7 +474,11 @@ class BuildTask(DockerTask):
 
             try:
                 self.logger.debug("Cloning from %s", source['source'])
-                git.Git().clone(source['source'], clone_dir)
+                git_opts = {}
+                if self.conf.clone_depth:
+                    git_opts.update(depth=self.conf.clone_depth, b=source['reference'])
+
+                git.Git().clone(source['source'], clone_dir, **git_opts)
                 git.Git(clone_dir).checkout(source['reference'])
                 reference_sha = git.Git(clone_dir).rev_parse('HEAD')
                 self.logger.debug("Git checkout by reference %s (%s)",
