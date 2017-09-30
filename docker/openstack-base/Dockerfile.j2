@@ -332,10 +332,8 @@ RUN ln -s openstack-base-source/* /requirements \
         urllib3[secure] \
     && rm -fr /root/.cache \
     && if [ "$(ls /plugins)" ]; then \
-        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
+        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache /plugins/* ;\
        fi
-
-
 
 
 ENV PATH /var/lib/kolla/venv/bin:$PATH
