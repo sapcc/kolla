@@ -3,7 +3,7 @@ MAINTAINER {{ maintainer }}
 
 {% block pyflame_header %}{% endblock %}
 
-RUN apt-get install -y software-properties-common &&  apt-add-repository ppa:trevorjay/pyflame && apt-get update && apt-get install -y pyflame && apt-get -y clean
+RUN apt-get update && apt-get install -y software-properties-common &&  apt-add-repository ppa:trevorjay/pyflame && apt-get update && apt-get install -y pyflame && apt-get -y clean
 
 {% block pyflame_footer %}{% endblock %}
 {% block footer %}{% endblock %}

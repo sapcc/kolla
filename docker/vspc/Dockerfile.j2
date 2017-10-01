@@ -10,8 +10,10 @@ RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
 
 {% elif install_type == 'source' %}
 
-RUN apt-get install -y python3 python3-netifaces && apt-get -y clean && curl -O https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py && pip3 --no-cache-dir install git+https://github.com/openstack/vmware-vspc.git#egg=vmware-vspc \
-    && useradd --user-group vspc
+RUN apt-get update && apt-get install -y python3 python3-netifaces && apt-get -y clean && curl -O https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py && pip3 --no-cache-dir install git+https://github.com/openstack/vmware-vspc.git#egg=vmware-vspc \
+    && useradd --user-group vspc \
+    && apt-get clean \
+    && rm -rf /tmp/* /var/tmp/*
 
 {% endif %}
 
