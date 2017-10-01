@@ -937,7 +937,6 @@ class KollaWorker(object):
         kolla_version = version.version_info.cached_version_string()
         supported_distro_release = common_config.DISTRO_RELEASE.get(
             self.base)
-        template_name = "Dockerfile.j2"
 
         if self.conf.reproducible:
             build_date = 'reproducible'
@@ -946,6 +945,7 @@ class KollaWorker(object):
             build_date = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d')
 
         for path in self.docker_build_paths:
+            template_name = "Dockerfile.j2"
             image_name = path.split("/")[-1]
             values = {'base_distro': self.base,
                       'base_image': self.conf.base_image,
