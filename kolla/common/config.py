@@ -318,10 +318,6 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/ceilometer/'
                      'ceilometer-master.tar.gz')},
-    'ceilometer-base-plugin-panko': {
-        'type': 'url',
-        'location': ('$tarballs_base/panko/'
-                     'panko-master.tar.gz')},
     'cinder-base': {
         'type': 'url',
         'location': ('$tarballs_base/cinder/'
@@ -379,10 +375,6 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/congress-dashboard/'
                      'congress-dashboard-master.tar.gz')},
-    'horizon-plugin-cloudkitty-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/cloudkitty-dashboard/'
-                     'cloudkitty-dashboard-master.tar.gz')},
     'horizon-plugin-designate-dashboard': {
         'type': 'url',
         'location': ('$tarballs_base/designate-dashboard/'
@@ -511,10 +503,6 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/mistral/'
                      'mistral-master.tar.gz')},
-    'mistral-base-plugin-tacker': {
-        'type': 'url',
-        'location': ('$tarballs_base/tacker/'
-                     'tacker-master.tar.gz')},
     'monasca-api': {
         'type': 'url',
         'location': ('$tarballs_base/monasca-api/'
