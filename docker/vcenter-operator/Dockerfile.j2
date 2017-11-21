@@ -8,7 +8,7 @@ RUN echo '{{ install_type }} not yet available for {{ base_distro }}' \
 
 {% elif install_type == 'source' %}
 RUN pip --no-cache-dir install 'git+https://github.com/sapcc/kubernetes-operators.git#egg=vcenter_operator&subdirectory=vcenter-operator' \
-    && useradd --create-home --user-group -G kolla vcenter_operator
+    && useradd --create-home --user-group -G kolla vcenter_operator && /bin/true
 
 {% endif %}
 
