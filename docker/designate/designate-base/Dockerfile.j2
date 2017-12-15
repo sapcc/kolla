@@ -43,7 +43,7 @@ COPY designate_sudoers_source /etc/sudoers.d/kolla_ironic_inspector_sudoers
 ADD designate-base-archive /designate-base-source
 RUN ln -s designate-base-source/* designate \
     && useradd --user-group designate \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -e -c requirements/upper-constraints.txt /designate \
+    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt -e /designate \
     && mkdir -p /etc/designate /var/log/designate /home/designate \
     && cp -r /designate/etc/designate/* /etc/designate/ \
     && mv /etc/designate/rootwrap.conf.sample /etc/designate/rootwrap.conf \
