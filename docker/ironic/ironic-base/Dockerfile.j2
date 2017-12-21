@@ -19,7 +19,7 @@ MAINTAINER {{ maintainer }}
 ADD ironic-base-archive /ironic-base-source
 RUN ln -s ironic-base-source/* ironic \
     && useradd --user-group --create-home --home-dir /var/lib/ironic ironic \
-    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt /ironic \
+    && /var/lib/kolla/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt -e /ironic \
     && mkdir -p /etc/ironic /var/lib/ironic \
     && cp -r /ironic/etc/ironic/* /etc/ironic/ \
     && chown -R ironic: /etc/ironic /var/lib/ironic \
