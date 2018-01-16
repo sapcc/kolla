@@ -635,7 +635,8 @@ class BuildTask(DockerTask):
                                     if line:
                                         self.logger.error('%s', line)
                     cache_images.append(tagged_name)
-                except docker.errors.NotFound:
+                except docker.errors.APIError:
+                    # We do not want to fail on cache errors
                     pass
 
             if self.conf.cache_tag:
