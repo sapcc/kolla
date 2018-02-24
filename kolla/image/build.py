@@ -636,7 +636,7 @@ class BuildTask(DockerTask):
                             if 'status' in stream:
                                 for line in stream['status'].split('\n'):
                                     if line:
-                                        self.logger.info('%s', line)
+                                        self.logger.debug('%s', line)
                             if 'errorDetail' in stream:
                                 self.logger.error('Error\'d with the following message')
                                 for line in stream['errorDetail']['message'].split('\n'):
