@@ -62,7 +62,7 @@ RUN ln -s neutron-base-source/* neutron \
     && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
     && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/kolla/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/neutron/rootwrap.conf \
     && if [ "$(ls /plugins)" ]; then \
-        /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt /plugins/* && rm -fr /root/.cache ;\
+        pip install --force-reinstall -c requirements/upper-constraints.txt `printf -- "-e %s\n" plugins/*` ;\
     fi
 
 {% endif %}
