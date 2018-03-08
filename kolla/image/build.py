@@ -79,9 +79,15 @@ STATUS_ERRORS = (STATUS_CONNECTION_ERROR, STATUS_PUSH_ERROR,
 def set_time(path):
     for root, dirs, files in os.walk(path):
         for file_ in files:
-            os.utime(os.path.join(root, file_), (0, 0))
+            try:
+                os.utime(os.path.join(root, file_), (0, 0))
+            except OSError:
+                pass
         for dir_ in dirs:
-            os.utime(os.path.join(root, dir_), (0, 0))
+            try:
+                os.utime(os.path.join(root, dir_), (0, 0))
+            except OSError:
+                pass
 
 class TarInfoNoMTime(tarfile.TarInfo):
     @property
