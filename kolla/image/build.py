@@ -17,6 +17,7 @@ from __future__ import print_function
 import contextlib
 import datetime
 import errno
+import fnmatch
 import json
 import logging
 import os
@@ -328,6 +329,20 @@ class Image(object):
             self.name, self.canonical_name, self.path,
             self.parent_name, self.status, self.parent, self.source)
 
+def reset_git(path):
+    repo = git.Repo(path)
+    reference_sha = repo.rev_parse('HEAD')
+    # Remove all non-reproducible git-files
+    os.remove(os.path.join(repo.common_dir, 'index'))  # Index contains the inode-numbers
+    HEAD = ("0000000000000000000000000000000000000000 %(sha)s "
+            "root@localhost 0 +0000\tclone: from %(source)s") % {
+               'sha': reference_sha,
+               'source': next(repo.remote().urls)}
+    for d in ['HEAD'] + [ h.path for h in  repo.heads] + [ r.path for r in repo.remote().refs ]:
+        file_name = os.path.join(repo.common_dir, 'logs', d)
+        if os.path.isfile(file_name):
+            with open(file_name, 'w') as f:
+                f.write(HEAD)
 
 class PushIntoQueueTask(task.Task):
     """Task that pushes some other task into a queue."""
@@ -474,26 +489,24 @@ class BuildTask(DockerTask):
                 self.logger.debug("Cloning from %s", source['source'])
                 git_opts = {}
                 if self.conf.clone_depth:
-                    git_opts.update(depth=self.conf.clone_depth, b=source['reference'])
+                    git_opts.update(depth=self.conf.clone_depth,
+                                    b=source['reference'],
+                                    single_branch=True)
+                if self.conf.submodules:
+                    git_opts.update(recurse_submodules=True)
 
                 git.Git().clone(source['source'], clone_dir, **git_opts)
-                git.Git(clone_dir).checkout(source['reference'])
-                reference_sha = git.Git(clone_dir).rev_parse('HEAD')
+                repo = git.Repo(clone_dir)
+
+                reference_sha = repo.rev_parse('HEAD')
                 self.logger.debug("Git checkout by reference %s (%s)",
                                   source['reference'], reference_sha)
 
                 if self.conf.reproducible:
-                    # Remove all non-reproducible git-files
-                    os.remove(os.path.join(clone_dir, '.git', 'index')) # Index contains the inode-numbers
-                    HEAD = ("0000000000000000000000000000000000000000 %(sha)s "
-                            "root@localhost 0 +0000\tclone: from %(source)s") % {
-                                'sha': reference_sha,
-                                'source': source['source']}
-                    for d in ['HEAD', 'refs/remotes/origin/HEAD', 'refs/heads/master', 'refs/heads/'+source['reference']]:
-                        file_name = os.path.join(clone_dir, '.git', 'logs', d)
-                        if os.path.isfile(file_name):
-                            with open(file_name, 'w') as f:
-                                f.write(HEAD)
+                    reset_git(clone_dir)
+                    for submodule in repo.submodules:
+                        reset_git(submodule.abspath)
+
             except Exception as e:
                 self.logger.error("Failed to get source from git")
                 self.logger.error("Error: %s", e)
