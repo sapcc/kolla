@@ -266,6 +266,8 @@ _CLI_OPTS = [
                       ' it by "pip install docker-squash"')),
     cfg.IntOpt('clone-depth', default=None, min=1,
                help='The depth of the repository to clone'),
+    cfg.BoolOpt('submodules', default=False,
+                help=('Whether to fetch submodules')),
 ]
 
 _BASE_OPTS = [

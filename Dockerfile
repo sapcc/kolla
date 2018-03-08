@@ -1,5 +1,5 @@
 # Mount the local socket and kolla directory
-# E.g: docker run  -v `pwd`:/usr/local/share/kolla -v /var/run/docker.sock:/var/run/docker.sock -v <kolla-config-dir>:/etc/kolla -ti <image-id>
+# E.g: docker build -t kolla . && docker run  -v `pwd`:/usr/local/share/kolla -v /var/run/docker.sock:/var/run/docker.sock -v <kolla-config-dir>:/etc/kolla -ti kolla
 FROM python:2 as wheels
 
 ADD . /kolla
