@@ -223,10 +223,8 @@ ADD plugins-archive /
 
 RUN ln -s openstack-base-source/* /requirements \
     && mkdir -p /var/lib/kolla \
-    && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && python get-pip.py \
-    && rm get-pip.py \
-    && pip install -U virtualenv && rm -fr /root/.cache \
+    && curl https://bootstrap.pypa.io/get-pip.py -o - | python - \
+    && pip install -U virtualenv 'pip(<10)' && rm -fr /root/.cache \
     && virtualenv --system-site-packages /var/lib/kolla/venv \
     && /var/lib/kolla/venv/bin/pip install -c requirements/upper-constraints.txt \
         Babel \
