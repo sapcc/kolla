@@ -670,27 +670,39 @@ class BuildTask(DockerTask):
                 self.logger.info("Caching from %r", cache_images)
 
             set_time(image.path)
-            for stream in self.dc.build(path=image.path,
-                                        tag=image.canonical_name,
-                                        nocache=not self.conf.cache,
-                                        rm=True,
-                                        decode=True,
-                                        network_mode=self.conf.network_mode,
-                                        pull=pull,
-                                        forcerm=self.forcerm,
-                                        cache_from=cache_images,
-                                        buildargs=buildargs):
-                if 'stream' in stream:
-                    for line in stream['stream'].split('\n'):
-                        if line:
-                            self.logger.info('%s', line)
-                if 'errorDetail' in stream:
-                    image.status = STATUS_ERROR
-                    self.logger.error('Error\'d with the following message')
-                    for line in stream['errorDetail']['message'].split('\n'):
-                        if line:
-                            self.logger.error('%s', line)
-                    return
+            for tries in six.moves.range(5):
+                for stream in self.dc.build(path=image.path,
+                                              tag=image.canonical_name,
+                                              nocache=not self.conf.cache,
+                                              rm=True,
+                                              decode=True,
+                                              network_mode=self.conf.network_mode,
+                                              pull=pull,
+                                              forcerm=self.forcerm,
+                                              cache_from=cache_images,
+                                              buildargs=buildargs):
+                    if 'stream' in stream:
+                        for line in stream['stream'].split('\n'):
+                            if line:
+                                self.logger.info('%s', line)
+                    if 'errorDetail' in stream:
+                        image.status = STATUS_ERROR
+                        self.logger.error(
+                            'Error\'d with the following message')
+                        failed_to_get_layer = False
+                        for line in \
+                                stream['errorDetail']['message'].split('\n'):
+                            if line:
+                                failed_to_get_layer \
+                                    = failed_to_get_layer or \
+                                      'failed to get layer' in line
+                                self.logger.error('%s', line)
+
+                        if failed_to_get_layer:
+                            os.system('sync')
+                            break
+                        else:
+                            return
 
             if image.status != STATUS_ERROR and self.conf.squash:
                 self.squash()
