@@ -369,106 +369,106 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/horizon/'
                      'horizon-master.tar.gz')},
-    'horizon-plugin-blazar-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/blazar-dashboard/'
-                     'blazar-dashboard-master.tar.gz')},
-    'horizon-plugin-congress-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/congress-dashboard/'
-                     'congress-dashboard-master.tar.gz')},
-    'horizon-plugin-designate-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/designate-dashboard/'
-                     'designate-dashboard-master.tar.gz')},
-    'horizon-plugin-fwaas-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-fwaas-dashboard/'
-                     'neutron-fwaas-dashboard-master.tar.gz')},
-    'horizon-plugin-freezer-web-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/freezer-web-ui/'
-                     'freezer-web-ui-master.tar.gz')},
-    'horizon-plugin-heat-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/heat-dashboard/'
-                     'heat-dashboard-master.tar.gz')},
-    'horizon-plugin-ironic-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/ironic-ui/'
-                     'ironic-ui-master.tar.gz')},
-    'horizon-plugin-karbor-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/karbor-dashboard/'
-                     'karbor-dashboard-master.tar.gz')},
-    'horizon-plugin-magnum-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/magnum-ui/'
-                     'magnum-ui-master.tar.gz')},
-    'horizon-plugin-manila-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/manila-ui/'
-                     'manila-ui-master.tar.gz')},
-    'horizon-plugin-mistral-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/mistral-dashboard/'
-                     'mistral-dashboard-master.tar.gz')},
-    'horizon-plugin-monasca-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/monasca-ui/'
-                     'monasca-ui-master.tar.gz')},
-    'horizon-plugin-murano-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/murano-dashboard/'
-                     'murano-dashboard-master.tar.gz')},
-    'horizon-plugin-neutron-lbaas-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-lbaas-dashboard/'
-                     'neutron-lbaas-dashboard-master.tar.gz')},
-    'horizon-plugin-octavia-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/octavia-dashboard/'
-                     'octavia-dashboard-master.tar.gz')},
-    'horizon-plugin-sahara-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/sahara-dashboard/'
-                     'sahara-dashboard-master.tar.gz')},
-    'horizon-plugin-searchlight-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/searchlight-ui/'
-                     'searchlight-ui-master.tar.gz')},
-    'horizon-plugin-senlin-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/senlin-dashboard/'
-                     'senlin-dashboard-master.tar.gz')},
-    'horizon-plugin-solum-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/solum-dashboard/'
-                     'solum-dashboard-master.tar.gz')},
-    'horizon-plugin-tacker-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/tacker-horizon/'
-                     'tacker-horizon-master.tar.gz')},
-    'horizon-plugin-trove-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/trove-dashboard/'
-                     'trove-dashboard-master.tar.gz')},
-    'horizon-plugin-vitrage-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/vitrage-dashboard/'
-                     'vitrage-dashboard-master.tar.gz')},
-    'horizon-plugin-watcher-dashboard': {
-        'type': 'url',
-        'location': ('$tarballs_base/watcher-dashboard/'
-                     'watcher-dashboard-master.tar.gz')},
-    'horizon-plugin-zaqar-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/zaqar-ui/'
-                     'zaqar-ui-master.tar.gz')},
-    'horizon-plugin-zun-ui': {
-        'type': 'url',
-        'location': ('$tarballs_base/zun-ui/'
-                     'zun-ui-master.tar.gz')},
+    # 'horizon-plugin-blazar-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/blazar-dashboard/'
+    #                  'blazar-dashboard-master.tar.gz')},
+    # 'horizon-plugin-congress-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/congress-dashboard/'
+    #                  'congress-dashboard-master.tar.gz')},
+    # 'horizon-plugin-designate-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/designate-dashboard/'
+    #                  'designate-dashboard-master.tar.gz')},
+    # 'horizon-plugin-fwaas-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-fwaas-dashboard/'
+    #                  'neutron-fwaas-dashboard-master.tar.gz')},
+    # 'horizon-plugin-freezer-web-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/freezer-web-ui/'
+    #                  'freezer-web-ui-master.tar.gz')},
+    # 'horizon-plugin-heat-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/heat-dashboard/'
+    #                  'heat-dashboard-master.tar.gz')},
+    # 'horizon-plugin-ironic-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/ironic-ui/'
+    #                  'ironic-ui-master.tar.gz')},
+    # 'horizon-plugin-karbor-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/karbor-dashboard/'
+    #                  'karbor-dashboard-master.tar.gz')},
+    # 'horizon-plugin-magnum-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/magnum-ui/'
+    #                  'magnum-ui-master.tar.gz')},
+    # 'horizon-plugin-network_mode-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/manila-ui/'
+    #                  'manila-ui-master.tar.gz')},
+    # 'horizon-plugin-mistral-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/mistral-dashboard/'
+    #                  'mistral-dashboard-master.tar.gz')},
+    # 'horizon-plugin-monasca-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/monasca-ui/'
+    #                  'monasca-ui-master.tar.gz')},
+    # 'horizon-plugin-murano-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/murano-dashboard/'
+    #                  'murano-dashboard-master.tar.gz')},
+    # 'horizon-plugin-neutron-lbaas-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-lbaas-dashboard/'
+    #                  'neutron-lbaas-dashboard-master.tar.gz')},
+    # 'horizon-plugin-octavia-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/octavia-dashboard/'
+    #                  'octavia-dashboard-master.tar.gz')},
+    # 'horizon-plugin-sahara-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/sahara-dashboard/'
+    #                  'sahara-dashboard-master.tar.gz')},
+    # 'horizon-plugin-searchlight-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/searchlight-ui/'
+    #                  'searchlight-ui-master.tar.gz')},
+    # 'horizon-plugin-senlin-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/senlin-dashboard/'
+    #                  'senlin-dashboard-master.tar.gz')},
+    # 'horizon-plugin-solum-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/solum-dashboard/'
+    #                  'solum-dashboard-master.tar.gz')},
+    # 'horizon-plugin-tacker-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/tacker-horizon/'
+    #                  'tacker-horizon-master.tar.gz')},
+    # 'horizon-plugin-trove-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/trove-dashboard/'
+    #                  'trove-dashboard-master.tar.gz')},
+    # 'horizon-plugin-vitrage-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/vitrage-dashboard/'
+    #                  'vitrage-dashboard-master.tar.gz')},
+    # 'horizon-plugin-watcher-dashboard': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/watcher-dashboard/'
+    #                  'watcher-dashboard-master.tar.gz')},
+    # 'horizon-plugin-zaqar-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/zaqar-ui/'
+    #                  'zaqar-ui-master.tar.gz')},
+    # 'horizon-plugin-zun-ui': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/zun-ui/'
+    #                  'zun-ui-master.tar.gz')},
     'ironic-base': {
         'type': 'url',
         'location': ('$tarballs_base/ironic/'
@@ -533,30 +533,30 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/neutron/'
                      'neutron-master.tar.gz')},
-    'neutron-base-plugin-neutron-fwaas': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-fwaas/'
-                     'neutron-fwaas-master.tar.gz')},
-    'neutron-base-plugin-networking-baremetal': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-baremetal/'
-                     'networking-baremetal-master.tar.gz')},
-    'neutron-base-plugin-networking-generic-switch': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-generic-switch/'
-                     'networking-generic-switch-master.tar.gz')},
-    'neutron-base-plugin-networking-sfc': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-sfc/'
-                     'networking-sfc-master.tar.gz')},
-    'neutron-base-plugin-vmware-nsx': {
-        'type': 'url',
-        'location': ('$tarballs_base/vmware-nsx/'
-                     'vmware-nsx-master.tar.gz')},
-    'neutron-base-plugin-vpnaas-agent': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-vpnaas/'
-                     'neutron-vpnaas-master.tar.gz')},
+    # 'neutron-base-plugin-neutron-fwaas': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-fwaas/'
+    #                  'neutron-fwaas-master.tar.gz')},
+    # 'neutron-base-plugin-networking-baremetal': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-baremetal/'
+    #                  'networking-baremetal-master.tar.gz')},
+    # 'neutron-base-plugin-networking-generic-switch': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-generic-switch/'
+    #                  'networking-generic-switch-master.tar.gz')},
+    # 'neutron-base-plugin-networking-sfc': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-sfc/'
+    #                  'networking-sfc-master.tar.gz')},
+    # 'neutron-base-plugin-vmware-nsx': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/vmware-nsx/'
+    #                  'vmware-nsx-master.tar.gz')},
+    # 'neutron-base-plugin-vpnaas-agent': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-vpnaas/'
+    #                  'neutron-vpnaas-master.tar.gz')},
     'neutron-bgp-dragent': {
         'type': 'url',
         'location': ('$tarballs_base/neutron-dynamic-routing/'
@@ -565,58 +565,58 @@ SOURCES = {
         'type': 'url',
         'location': ('$tarballs_base/neutron-lbaas/'
                      'neutron-lbaas-master.tar.gz')},
-    'neutron-server-opendaylight-plugin-networking-odl': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-odl/'
-                     'networking-odl-master.tar.gz')},
-    'neutron-server-opendaylight-plugin-networking-bgpvpn': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-bgpvpn/'
-                     'networking-bgpvpn-master.tar.gz')},
-    'neutron-server-opendaylight-plugin-networking-l2gw': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-l2gw/'
-                     'networking-l2gw-master.tar.gz')},
-    'neutron-server-opendaylight-plugin-networking-sfc': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-sfc/'
-                     'networking-sfc-master.tar.gz')},
-    'neutron-server-plugin-networking-infoblox': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-infoblox/'
-                     'networking-infoblox-master.tar.gz')},
-    'neutron-server-plugin-neutron-dynamic-routing': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-dynamic-routing/'
-                     'neutron-dynamic-routing-master.tar.gz')},
-    'neutron-server-plugin-neutron-lbaas': {
-        'type': 'url',
-        'location': ('$tarballs_base/neutron-lbaas/'
-                     'neutron-lbaas-master.tar.gz')},
-    'neutron-server-plugin-vmware-nsxlib': {
-        'type': 'url',
-        'location': ('$tarballs_base/vmware-nsxlib/'
-                     'vmware-nsxlib-master.tar.gz')},
+    # 'neutron-server-opendaylight-plugin-networking-odl': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-odl/'
+    #                  'networking-odl-master.tar.gz')},
+    # 'neutron-server-opendaylight-plugin-networking-bgpvpn': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-bgpvpn/'
+    #                  'networking-bgpvpn-master.tar.gz')},
+    # 'neutron-server-opendaylight-plugin-networking-l2gw': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-l2gw/'
+    #                  'networking-l2gw-master.tar.gz')},
+    # 'neutron-server-opendaylight-plugin-networking-sfc': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-sfc/'
+    #                  'networking-sfc-master.tar.gz')},
+    # 'neutron-server-plugin-networking-infoblox': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-infoblox/'
+    #                  'networking-infoblox-master.tar.gz')},
+    # 'neutron-server-plugin-neutron-dynamic-routing': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-dynamic-routing/'
+    #                  'neutron-dynamic-routing-master.tar.gz')},
+    # 'neutron-server-plugin-neutron-lbaas': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/neutron-lbaas/'
+    #                  'neutron-lbaas-master.tar.gz')},
+    # 'neutron-server-plugin-vmware-nsxlib': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/vmware-nsxlib/'
+    #                 'vmware-nsxlib-master.tar.gz')},
     'neutron-vpnaas-agent': {
         'type': 'url',
         'location': ('$tarballs_base/neutron-vpnaas/'
                      'neutron-vpnaas-master.tar.gz')},
-    'neutron-server-ovn-plugin-networking-ovn': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-ovn/'
-                     'networking-ovn-master.tar.gz')},
-    'neutron-metadata-agent-ovn-plugin-networking-ovn': {
-        'type': 'url',
-        'location': ('$tarballs_base/networking-ovn/'
-                     'networking-ovn-master.tar.gz')},
+    # 'neutron-server-ovn-plugin-networking-ovn': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-ovn/'
+    #                  'networking-ovn-master.tar.gz')},
+    # 'neutron-metadata-agent-ovn-plugin-networking-ovn': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/networking-ovn/'
+    #                  'networking-ovn-master.tar.gz')},
     'nova-base': {
         'type': 'url',
         'location': ('$tarballs_base/nova/'
                      'nova-master.tar.gz')},
-    'nova-base-plugin-blazar': {
-        'type': 'url',
-        'location': ('$tarballs_base/blazar-nova/'
-                     'blazar-nova-master.tar.gz')},
+    # 'nova-base-plugin-blazar': {
+    #     'type': 'url',
+    #     'location': ('$tarballs_base/blazar-nova/'
+    #                  'blazar-nova-master.tar.gz')},
     'nova-base-plugin-mksproxy': {
         'type': 'url',
         'location': ('$tarballs_base/nova-mksproxy/'
