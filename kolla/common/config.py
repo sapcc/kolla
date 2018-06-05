@@ -244,7 +244,7 @@ _CLI_OPTS = [
                help=('The number of threads to use while building.'
                      ' (Note: setting to one will allow real time'
                      ' logging)')),
-    cfg.StrOpt('tag', default=version.cached_version_string(),
+    cfg.ListOpt('tag', default=[version.cached_version_string()],
                help='The Docker tag'),
     cfg.ListOpt('cache-tag', default=[],
                  help='Tags, which mark images, the build-cache should be populated from'),
