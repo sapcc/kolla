@@ -338,6 +338,7 @@ class Image(object):
             self.name, self.canonical_name, self.path,
             self.parent_name, self.status, self.parent, self.source)
 
+
 def reset_git(path):
     repo = git.Repo(path)
     reference_sha = repo.rev_parse('HEAD')
@@ -352,6 +353,7 @@ def reset_git(path):
         if os.path.isfile(file_name):
             with open(file_name, 'w') as f:
                 f.write(HEAD)
+
 
 class PushIntoQueueTask(task.Task):
     """Task that pushes some other task into a queue."""
@@ -447,13 +449,23 @@ class BuildTask(DockerTask):
     def followups(self):
         followups = []
         if self.conf.push and self.success:
-            followups.extend([
+            followups.append(
                 # If we are supposed to push the image into a docker
                 # repository, then make sure we do that...
                 PushIntoQueueTask(
                     PushTask(self.conf, self.image),
-                    self.push_queue),
-            ])
+                    self.push_queue)
+            )
+            for tag in self.conf.tag[1:]:
+                tagged_image = self.image.copy()
+                tagged_image.tag = tag
+                tagged_image.canonical_name = ':'.join([
+                    self.image.untagged_name,
+                    tag])
+                followups.append(PushIntoQueueTask(
+                    PushTask(self.conf, tagged_image),
+                    self.push_queue)
+                )
         if self.image.children and self.success:
             for image in self.image.children:
                 if image.status == STATUS_UNMATCHED:
@@ -672,15 +684,15 @@ class BuildTask(DockerTask):
             set_time(image.path)
             for tries in six.moves.range(5):
                 for stream in self.dc.build(path=image.path,
-                                              tag=image.canonical_name,
-                                              nocache=not self.conf.cache,
-                                              rm=True,
+                                          tag=image.canonical_name,
+                                          nocache=not self.conf.cache,
+                                          rm=True,
                                               decode=True,
-                                              network_mode=self.conf.network_mode,
-                                              pull=pull,
-                                              forcerm=self.forcerm,
-                                              cache_from=cache_images,
-                                              buildargs=buildargs):
+                                          network_mode=self.conf.network_mode,
+                                          pull=pull,
+                                          forcerm=self.forcerm,
+                                          cache_from=cache_images,
+                                          buildargs=buildargs):
                     if 'stream' in stream:
                         for line in stream['stream'].split('\n'):
                             if line:
@@ -689,23 +701,23 @@ class BuildTask(DockerTask):
                         image.status = STATUS_ERROR
                         self.logger.error(
                             'Error\'d with the following message')
-                        failed_to_get_layer = False
-                        for line in \
-                                stream['errorDetail']['message'].split('\n'):
-                            if line:
-                                failed_to_get_layer \
-                                    = failed_to_get_layer or \
-                                      'failed to get layer' in line
-                                self.logger.error('%s', line)
+                        break
 
-                        if failed_to_get_layer:
-                            os.system('sync')
-                            break
-                        else:
-                            return
+            if image.status != STATUS_ERROR:
+                if self.conf.squash:
+                    self.squash()
+                for tag in self.conf.tag[1:]:
+                    self.logger.debug("Tagging %s as %s:%s",
+                                      image.canonical_name,
+                                      image.untagged_name,
+                                      tag
+                                      )
+                    self.dc.tag(image.canonical_name,
+                                image.untagged_name,
+                                tag=tag,
+                                force=True
+                                )
 
-            if image.status != STATUS_ERROR and self.conf.squash:
-                self.squash()
         except docker.errors.DockerException:
             image.status = STATUS_ERROR
             self.logger.exception('Unknown docker error when building')
@@ -988,7 +1000,7 @@ class KollaWorker(object):
                       'image_prefix': self.image_prefix,
                       'install_type': self.install_type,
                       'namespace': self.namespace,
-                      'tag': self.tag,
+                      'tag': self.tag[0],
                       'maintainer': self.maintainer,
                       'kolla_version': kolla_version,
                       'image_name': image_name,
@@ -1219,7 +1231,7 @@ class KollaWorker(object):
 
             image_name = os.path.basename(path)
             canonical_name = (self.namespace + '/' + self.image_prefix +
-                              image_name + ':' + self.tag)
+                              image_name + ':' + self.tag[0])
             parent_search_pattern = re.compile(r'^FROM.*$', re.MULTILINE)
             match = re.search(parent_search_pattern, content)
             if match:
