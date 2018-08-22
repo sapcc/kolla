@@ -682,26 +682,25 @@ class BuildTask(DockerTask):
                 self.logger.info("Caching from %r", cache_images)
 
             set_time(image.path)
-            for tries in six.moves.range(5):
-                for stream in self.dc.build(path=image.path,
-                                          tag=image.canonical_name,
-                                          nocache=not self.conf.cache,
-                                          rm=True,
-                                              decode=True,
-                                          network_mode=self.conf.network_mode,
-                                          pull=pull,
-                                          forcerm=self.forcerm,
-                                          cache_from=cache_images,
-                                          buildargs=buildargs):
-                    if 'stream' in stream:
-                        for line in stream['stream'].split('\n'):
-                            if line:
-                                self.logger.info('%s', line)
-                    if 'errorDetail' in stream:
-                        image.status = STATUS_ERROR
-                        self.logger.error(
-                            'Error\'d with the following message')
-                        break
+            for stream in self.dc.build(path=image.path,
+                                      tag=image.canonical_name,
+                                      nocache=not self.conf.cache,
+                                      rm=True,
+                                      decode=True,
+                                      network_mode=self.conf.network_mode,
+                                      pull=pull,
+                                      forcerm=self.forcerm,
+                                      cache_from=cache_images,
+                                      buildargs=buildargs):
+                if 'stream' in stream:
+                    for line in stream['stream'].split('\n'):
+                        if line:
+                            self.logger.info('%s', line)
+                if 'errorDetail' in stream:
+                    image.status = STATUS_ERROR
+                    self.logger.error(
+                        'Error\'d with the following message')
+                    break
 
             if image.status != STATUS_ERROR:
                 if self.conf.squash:
