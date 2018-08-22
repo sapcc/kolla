@@ -1024,13 +1024,16 @@ class KollaWorker(object):
                 env.filters.update(self._get_filters())
                 env.globals.update(self._get_methods())
                 template = env.get_template(template_name)
-            content = template.render(values, env=os.environ)
-            content_path = os.path.join(path, 'Dockerfile')
-            with open(content_path, 'w') as f:
-                LOG.debug("Rendered %s into:", tpl_path)
-                LOG.debug(content)
-                f.write(content)
-                LOG.debug("Wrote it to %s", content_path)
+            try:
+              content = template.render(values, env=os.environ)
+              content_path = os.path.join(path, 'Dockerfile')
+              with open(content_path, 'w') as f:
+                  LOG.debug("Rendered %s into:", tpl_path)
+                  LOG.debug(content)
+                  f.write(content)
+                  LOG.debug("Wrote it to %s", content_path)
+            except jinja2.exceptions.UndefinedError as e:
+              LOG.warning("Could not render %s due to %s", tpl_path, e)
 
     def _merge_overrides(self, overrides):
         tpl_name = os.path.basename(overrides[0])
