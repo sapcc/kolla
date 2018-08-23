@@ -78,6 +78,7 @@ RUN echo {{ oraclelinux_contentdir }} >> /etc/yum/vars/contentdir
 
 {% if base_arch == 'x86_64' %}
     {% set base_yum_repo_files = [
+        'crane.repo',
         'elasticsearch.repo',
         'grafana.repo',
         'influxdb.repo',
