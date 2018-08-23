@@ -33,11 +33,7 @@ ENV PS1="$(tput bold)($(printenv KOLLA_SERVICE_NAME))$(tput sgr0)[$(id -un)@$(ho
 # enables to provide repo overrides at a later date in a simple fashion if we
 # desire such functionality.  I think we will :)
 
-RUN CURRENT_DISTRO_RELEASE=$(awk '{match($0, /[0-9]+/,version)}END{print version[0]}' /etc/system-release); \
-    if [  $CURRENT_DISTRO_RELEASE != "{{ supported_distro_release }}" ]; then \
-        echo "Only release '{{ supported_distro_release }}' is supported on {{ base_distro }}"; false; \
-    fi \
-    && cat /tmp/kolla_bashrc >> /etc/bashrc \
+RUN cat /tmp/kolla_bashrc >> /etc/bashrc \
     && sed -i 's|^\(override_install_langs=.*\)|# \1|' /etc/yum.conf
 
 {% block base_yum_conf %}
@@ -267,9 +263,6 @@ RUN yum -y install \
     {# endif for install type is source for RPM based distros #}
 {# endif for base_distro centos,oraclelinux,rhel #}
 {% elif base_distro in ['debian', 'ubuntu'] %}
-
-RUN if [ $(awk -F '=' '/DISTRIB_RELEASE/{print $2}' /etc/lsb-release) != "{{ supported_distro_release }}" ]; then \
-        echo "Only release '{{ supported_distro_release }}' is supported on {{ base_distro }}"; false; fi
 
 # Customize PS1 bash shell
 RUN cat /tmp/kolla_bashrc >> /etc/bash.bashrc
