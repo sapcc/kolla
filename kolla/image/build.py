@@ -17,7 +17,6 @@ from __future__ import print_function
 import contextlib
 import datetime
 import errno
-import fnmatch
 import json
 import logging
 import os
@@ -662,17 +661,19 @@ class BuildTask(DockerTask):
                     tagged_name = "{0}:{1}".format(image.untagged_name, tag)
                     image_count = len(self.dc.images(name=tagged_name, quiet=True))
                     if image_count != 1:
-                        for response in self.dc.pull(tagged_name, stream=True):
-                            stream = json.loads(response.decode('utf-8'))
+                        for stream in self.dc.pull(tagged_name, decode=True,
+                                                     stream=True):
                             if 'status' in stream:
                                 for line in stream['status'].split('\n'):
                                     if line:
                                         self.logger.debug('%s', line)
                             if 'errorDetail' in stream:
-                                self.logger.error('Error\'d with the following message')
+                                self.logger.warning(
+                                    'Error\'d with the following message')
                                 for line in stream['errorDetail']['message'].split('\n'):
                                     if line:
-                                        self.logger.error('%s', line)
+                                        self.logger.warning('%s', line)
+                                continue
                     cache_images.append(tagged_name)
                 except docker.errors.APIError:
                     # We do not want to fail on cache errors
@@ -683,24 +684,26 @@ class BuildTask(DockerTask):
 
             set_time(image.path)
             for stream in self.dc.build(path=image.path,
-                                      tag=image.canonical_name,
-                                      nocache=not self.conf.cache,
-                                      rm=True,
-                                      decode=True,
-                                      network_mode=self.conf.network_mode,
-                                      pull=pull,
-                                      forcerm=self.forcerm,
-                                      cache_from=cache_images,
-                                      buildargs=buildargs):
+                                        tag=image.canonical_name,
+                                        nocache=not self.conf.cache,
+                                        rm=True,
+                                        decode=True,
+                                        network_mode=self.conf.network_mode,
+                                        pull=pull,
+                                        forcerm=self.forcerm,
+                                        cache_from=cache_images,
+                                        buildargs=buildargs):
                 if 'stream' in stream:
                     for line in stream['stream'].split('\n'):
                         if line:
                             self.logger.info('%s', line)
                 if 'errorDetail' in stream:
                     image.status = STATUS_ERROR
-                    self.logger.error(
-                        'Error\'d with the following message')
-                    break
+                    self.logger.error('Error\'d with the following message')
+                    for line in stream['errorDetail']['message'].split('\n'):
+                        if line:
+                            self.logger.error('%s', line)
+                    return
 
             if image.status != STATUS_ERROR:
                 if self.conf.squash:
@@ -733,7 +736,7 @@ class BuildTask(DockerTask):
 
         parent_history = self.dc.history(self.image.parent_name)
         parent_last_layer = parent_history[0]['Id']
-        self.logger.info('Parent lastest layer is: %s' % parent_last_layer)
+        self.logger.info('Parent latest layer is: %s' % parent_last_layer)
 
         utils.squash(image_id, image_tag, from_layer=parent_last_layer,
                      cleanup=self.conf.squash_cleanup,
