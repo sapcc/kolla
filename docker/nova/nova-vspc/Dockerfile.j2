@@ -1,0 +1,8 @@
+FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+{% block nova_vspc_footer %}{% endblock %}
+
+{{ include_footer }}
+
+USER nova
