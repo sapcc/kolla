@@ -178,8 +178,6 @@ SKIPPED_IMAGES = {
     ],
     'ubuntu+source': [
         "crane",
-        # There is no qdrouterd package for ubuntu bionic
-        "qdrouterd",
         "tripleoclient",
         # TODO(jeffrey4l): remove tripleo-ui when following bug is fixed
         # https://bugs.launchpad.net/tripleo/+bug/1744215
