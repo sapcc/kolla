@@ -25,7 +25,7 @@ deb https://packagecloud.io/grafana/stable/debian/ jessie main
 deb http://packages.treasuredata.com/2/ubuntu/xenial/ xenial contrib
 
 # Qdrouterd repo
-deb http://ppa.launchpad.net/qpid/released/ubuntu/ xenial main
+deb http://ppa.launchpad.net/qpid/released/ubuntu/ bionic main
 
 # Sensu repo
 deb https://sensu.global.ssl.fastly.net/apt bionic main
