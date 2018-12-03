@@ -21,11 +21,27 @@
 {% endif %}
 {%- endmacro %}
 
-{% macro install_pip(packages, constraints = true) %}
-{%- if packages is sequence and packages|length > 0 -%}
+{% macro _install_pip(packages, constraints = true, editable = false) -%}
     pip --no-cache-dir install --upgrade{{ ' ' }}
-    {%- if constraints %}-c /requirements/upper-constraints.txt {% endif -%}
-    {%- for package in packages %}{% if package[0] == '/' %}$( printf -- "-e %s " {{ package }}){% else %}{{ package }}{{ ' ' }}{% endif %}{% endfor %}
+    {%- if constraints %}-c /requirements/upper-constraints.txt{{ ' ' }}{% endif -%}
+    {%- if editable %}-e {% endif %}{{ packages }}
+{%- endmacro %}
+
+{% macro install_pip(packages, constraints = true) -%}
+{%- if packages is sequence and packages|length > 0 -%}
+    {%- set package_names = [] -%}
+    {%- set package_paths = [] -%}
+    {%- for package in packages -%}
+      {%- if package[0] == '/' %}{% set _ = package_paths.append(package) -%}
+      {%- else %}{% set _ = package_names.append(package) %}{% endif -%}
+    {%- endfor -%}
+    {%- if package_names %}{{ _install_pip( (package_names|join(' ')), constraints=constraints ) }}{% endif -%}
+	{%- if package_names and package_paths %} && {% endif -%}
+	{%- for package_path in package_paths -%}
+		for package in {{ package_path }}; do \
+		{{ _install_pip( '${package}', constraints=constraints, editable=true ) }}; done
+		{%- if not loop.last %} && {% endif -%}
+	{%- endfor -%}
 {%- else -%}
     true
 {%- endif -%}
