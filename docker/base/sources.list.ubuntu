@@ -34,4 +34,4 @@ deb https://sensu.global.ssl.fastly.net/apt bionic main
 deb http://ppa.launchpad.net/odl-team/carbon/ubuntu xenial main
 
 # rabbitmq repo
-deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ xenial main
+deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ bionic main
