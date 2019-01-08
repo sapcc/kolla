@@ -354,6 +354,7 @@ COPY apt_preferences.{{ base_distro }} /etc/apt/preferences
       'A20F259AEB9C94BB'
     ] %}
     {% set remote_apt_keys = [
+      'https://packages.grafana.com/gpg.key',
     ] %}
 {% elif base_distro == 'debian' %}
     {% set base_apt_keys = [
@@ -367,6 +368,7 @@ COPY apt_preferences.{{ base_distro }} /etc/apt/preferences
     {% set remote_apt_keys = [
       'http://obs.linaro.org/ERP:/kolla:/queens/Debian_9/Release.key',
       'https://bintray.com/user/downloadSubjectPublicKey?username=bintray',
+      'https://packages.grafana.com/gpg.key',
     ] %}
     {% set base_apt_packages = base_apt_packages +
       ['sudo',]
