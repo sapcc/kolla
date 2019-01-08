@@ -347,7 +347,8 @@ COPY apt_preferences.{{ base_distro }} /etc/apt/preferences
       'A20F259AEB9C94BB'
     ] %}
     {% set remote_apt_keys = [
-      'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey'
+      'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey',
+      'https://packages.grafana.com/gpg.key',
     ] %}
 {% elif base_distro == 'debian' %}
     {% set base_apt_keys = [
@@ -362,6 +363,7 @@ COPY apt_preferences.{{ base_distro }} /etc/apt/preferences
       'http://obs.linaro.org/ERP:/18.06/Debian_9/Release.key',
       'https://download.docker.com/linux/debian/gpg',
       'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey'
+      'https://packages.grafana.com/gpg.key',
     ] %}
     {% set base_apt_packages = base_apt_packages +
       ['sudo',]
