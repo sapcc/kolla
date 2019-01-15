@@ -503,12 +503,11 @@ class BuildTask(DockerTask):
                 shutil.rmtree(clone_dir)
 
             try:
-                self.logger.debug("Cloning from %s", source['source'])
-                git_opts = {}
+                self.logger.debug("Cloning from %s@%s", source['source'], source['reference'])
+                git_opts = dict(branch=source['reference'],
+                                single_branch=True)
                 if self.conf.clone_depth:
-                    git_opts.update(depth=self.conf.clone_depth,
-                                    b=source['reference'],
-                                    single_branch=True)
+                    git_opts.update(depth=self.conf.clone_depth)
                 if self.conf.submodules:
                     git_opts.update(recurse_submodules=True)
 
