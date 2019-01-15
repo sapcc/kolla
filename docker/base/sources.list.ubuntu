@@ -33,9 +33,6 @@ deb https://repos.influxdata.com/ubuntu xenial stable
 # Grafana repo
 deb https://packages.grafana.com/oss/deb stable main
 
-# Nfs-ganesha repo
-deb http://download.ceph.com/nfs-ganesha/deb-V2.5-stable/luminous xenial main
-
 # Fluentd repo
 deb http://packages.treasuredata.com/2/ubuntu/xenial/ xenial contrib
 
