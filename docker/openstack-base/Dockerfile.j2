@@ -387,7 +387,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
 ADD openstack-base-archive /openstack-base-source
 RUN ln -s openstack-base-source/* /requirements \
     && mkdir -p /var/lib/kolla \
-    && {{ macros.install_pip(['virtualenv'], constraints = false)}} \
+    && {{ macros.install_pip(['virtualenv<20.0.0'], constraints = false)}} \
     && virtualenv --system-site-packages /var/lib/kolla/venv
 
 ENV PATH /var/lib/kolla/venv/bin:$PATH
