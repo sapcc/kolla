@@ -11,6 +11,7 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
 {%- endfor %}
 
 LABEL kolla_version="{{ kolla_version }}"
+LABEL source_repository="https://github.com/sapcc/kolla"
 
 {% import "macros.j2" as macros with context %}
 {% block base_header %}{% endblock %}
