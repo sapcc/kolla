@@ -774,6 +774,11 @@ class WorkerThread(threading.Thread):
                         LOG.exception('Unhandled error when running %s',
                                       task.name)
                     # try again...
+                    LOG.info("Sleeping 60s between retries")
+                    for i in range(60):
+                        if self.should_stop:
+                            break
+                        time.sleep(1)
                     task.reset()
                 if task.success and not self.should_stop:
                     for next_task in task.followups:
